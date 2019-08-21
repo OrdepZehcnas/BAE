@@ -1,0 +1,3 @@
+//Example of a program of Boolean-Arithmetic Expressions
+
+(let x := 1+2 in ((x+5)*(x+2)) end)

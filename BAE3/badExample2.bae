@@ -1,0 +1,3 @@
+/*A second bad example of program*/
+
+(let x := (10+1) in (x+true) end)
