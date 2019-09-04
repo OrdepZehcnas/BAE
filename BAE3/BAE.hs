@@ -20,6 +20,12 @@ module BAE where
            | Ift BAE BAE BAE
            | LetE Name BAE BAE
 
+-- | Tipo. Tipo que representa a los tipos de nuestro lenguaje.
+data Tipo = NAT | BOOL
+
+-- | Ctx. Tipo que represeta al contexto para la verificacion de tipos.
+type Ctx = [(Name, Tipo)]
+
 -- | se instancia la clase Show para poder especificar como queremos que se impriman las
 -- | expresiones Aritmetico-Booleanas. 
   instance Show BAE where
@@ -75,6 +81,10 @@ module BAE where
 -- | Aritmetico-Booleana.
   evals :: BAE -> BAE
   evals e = error "error"
+
+-- | vt. funcion que dato una expresion y un tipo verifica si esta bien formada.
+  vt :: Ctx -> BAE -> Tipo -> Bool
+  vt _ _ _ = False
 
 -- | isValue. funcion que determina si una expresion Aritmetico-Booleana es valor.
   isValue :: BAE -> Bool
