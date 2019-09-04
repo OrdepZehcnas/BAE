@@ -20,6 +20,9 @@ module BAE where
            | Ift BAE BAE BAE
            | LetE Name BAE BAE
 
+-- | Sust. Tipo que representa una sustitución de las expresiones Aritmetico-Booleanas.
+  type Sust = (Name,BAE)           
+
 -- | Tipo. Tipo que representa a los tipos de nuestro lenguaje.
 data Tipo = NAT | BOOL
 
@@ -84,7 +87,7 @@ type Ctx = [(Name, Tipo)]
 
 -- | vt. funcion que dato una expresion y un tipo verifica si esta bien formada.
   vt :: Ctx -> BAE -> Tipo -> Bool
-  vt _ _ _ = False
+  vt _ _ _ = False  
 
 -- | isValue. funcion que determina si una expresion Aritmetico-Booleana es valor.
   isValue :: BAE -> Bool
