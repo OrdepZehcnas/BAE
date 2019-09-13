@@ -8,5 +8,5 @@ main = do
   case args of
     [file] -> do
       x <- parseFile file
-      putStrLn $ show $ eval $ transform x
+      putStrLn $ show $ eval (fst (transform x)) (snd (transform x)) 
     _ -> putStrLn "Error: Only put the name of the file."

@@ -9,14 +9,18 @@ module ParseBAE where
 
   type Name = String
 
+  data Type = NAT | BOOL deriving(Show,Eq)
+
+  data StmtT = Typed Stmt Type deriving(Show)
+
   data Stmt = If Stmt Stmt Stmt 
-            | Let Name Stmt Stmt
-            | ABUnary ABUn Stmt
-            | ABBinary ABBin Stmt Stmt
-            | ABRel RBin Stmt Stmt
-            | Var Name
-            | Num Integer
-            | BoolCt Bool deriving(Show)
+            | Let Name Stmt Stmt 
+            | ABUnary ABUn Stmt 
+            | ABBinary ABBin Stmt Stmt 
+            | ABRel RBin Stmt Stmt 
+            | Var Name 
+            | Num Integer 
+            | BoolCt Bool  deriving(Show)
 
   data ABUn = Not | Succ | Pred deriving(Show)
 
@@ -42,8 +46,10 @@ module ParseBAE where
                                        "pred",
                                        "let",
                                        "in",
-                                       "end"]
-             , Token.reservedOpNames = ["+","*",">","<","=",":=","and","or","not"]}
+                                       "end",
+                                       "NAT",
+                                       "BOOL"]
+             , Token.reservedOpNames = ["+","*",">","<","=",":=","and","or","not","::"]}
 
   lexer = Token.makeTokenParser languageDef
 
@@ -54,8 +60,20 @@ module ParseBAE where
   integer = Token.integer lexer
   whiteSpace = Token.whiteSpace lexer
 
-  baeParser :: Parser Stmt
-  baeParser = whiteSpace >> parens statement
+  baeParser :: Parser StmtT
+  baeParser = whiteSpace >> statement_typed
+
+  statement_typed :: Parser StmtT
+  statement_typed = 
+    do 
+      stmt <- statement
+      reservedOp "::"
+      typo <- typoParser
+      return $ Typed stmt typo
+
+  typoParser = (reserved "NAT" >> return NAT)
+            <|> (reserved "BOOL" >> return BOOL)
+
 
   statement :: Parser Stmt
   statement = ifStmt
@@ -98,13 +116,13 @@ module ParseBAE where
                 ,[Infix (reservedOp "<" >> return (ABRel LowT)) AssocLeft]
                 ,[Infix (reservedOp "=" >> return (ABRel Equ)) AssocLeft]]
 
-  parseString :: String -> Stmt
+  parseString :: String -> StmtT
   parseString str =
     case parse baeParser "" str of
       Left e -> error $ show e
       Right r -> r
 
-  parseFile :: String -> IO Stmt
+  parseFile :: String -> IO StmtT
   parseFile file =
     do program <- readFile file
        case parse baeParser "" program of 
