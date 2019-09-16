@@ -24,7 +24,7 @@ module BAE where
   type Sust = (Name,BAE)           
 
 -- | Ctx. Tipo que represeta al contexto para la verificacion de tipos.
-type Ctx = [(Name, Tipo)]
+type Ctx = [(Name, Type)]
 
 -- | se instancia la clase Show para poder especificar como queremos que se impriman las
 -- | expresiones Aritmetico-Booleanas. 
